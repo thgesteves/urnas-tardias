@@ -35,6 +35,28 @@ Quantos votos entraram depois das 17h no 2º turno de 2026 (25/10), quando o STF
 
 Com corte às 17h entram todas as urnas, e a maior parte desses votos vem de eleitores que já estavam na fila às 17h, o que é permitido em qualquer eleição.
 
+## Para quem foram os votos tardios (estimativa)
+
+![ufs](ufs.png)
+
+O log da urna registra a hora de cada voto, mas não o candidato (o voto é secreto, e o RDV embaralha os votos e não tem horário). Então não dá para saber o número exato. A estimativa usa o Boletim de Urna (BU) de cada seção estendida com voto depois das 17h (3.348 seções) e divide os votos tardios da seção na proporção do resultado dela.
+
+| | Votos depois das 17h |
+|---|---|
+| Lula (13) | ~2.757 |
+| Flávio (22) | ~2.099 |
+| Brancos e nulos | ~192 |
+| Saldo Lula − Flávio | ~+658 (0,015% da vantagem de Lula) |
+
+72% dos votos tardios caíram em UFs que Flávio venceu (RJ e SP concentram 71%). Mesmo que todos os 5.052 fossem para um só candidato, seriam 0,11% da vantagem.
+
+```sh
+python3 candidatos.py    # baixa os BUs e o resultado por UF, gera candidatos_uf.csv
+uv run grafico.py        # gera ufs.png
+```
+
+O BU fica na mesma pasta do log (`{hash}/o03221{uf}{municipio}{zona}{secao}-bu.dat`), em ASN.1 DER. O resultado por UF vem de `resultados.tse.jus.br/oficial/ele2026/6258/dados/{uf}/{uf}-c0001-e006258-u.json`.
+
 ## Método
 
 Os dados vêm do log de cada urna (`logd.dat`), publicado pelo TSE em `resultados.tse.jus.br`. Exemplo com a seção 0517 da zona 0009 do Rio de Janeiro (código do município 60011):
@@ -79,3 +101,4 @@ O crawler limita a taxa (`RPS`, padrão 10 req/s) e retoma de onde parou. São ~
 
 - `secoes.csv`: uma linha por urna (fuso, abertura, encerramento, último voto, votos depois das 17h e das 17h20, total de votos, classe)
 - `municipios.csv`: municípios com urnas estendidas
+- `candidatos_uf.csv`: por UF, urnas estendidas, votos depois das 17h, estimativa por candidato e quem venceu na UF
